@@ -13,12 +13,12 @@ no os liéis con los detalles, sobre todo en TCP):
   - HTTP (los metodos que queráis, es fácil añadir más)
   - DHCP (opcional)
 
-## 2. Ataques de hombre en medio (Individual)
+## 2. Ataques de hombre en medio (Individual) (Opcional)
 
 A jugar, haced esto: [LABS](https://github.com/TretornESP/Nebrija/tree/main/p1)
 Podéis saltaros la creación del laboratorio si queréis, podéis usar vuestra red local de casa
 (o la de la uni si no os pillan xd)
 
-## 3. CTF De la semana
+## 3. CTF De la semana (Opcional)
 
 https://app.hackthebox.com/challenges/Acknowledge%2520the%2520corn?tab=play_challenge
