@@ -9,6 +9,7 @@
 #include <stdio.h>
 
 #include "hal.h"
+#include "commons.h"
 
 void * hal_create_device() {
     struct device_handle *handle = malloc(sizeof(struct device_handle));
@@ -24,14 +25,14 @@ void * hal_create_device() {
         return NULL;
     }
     ifr.ifr_addr.sa_family = AF_PACKET;
-    strncpy(ifr.ifr_name, HAL_IFACE_NAME, IFNAMSIZ-1);
+    strncpy(ifr.ifr_name, interface_name, IFNAMSIZ-1);
     ioctl(handle->fd, SIOCGIFHWADDR, &ifr);
     memcpy(handle->mac, ifr.ifr_hwaddr.sa_data, 6);
     ioctl(handle->fd, SIOCGIFADDR, &ifr);
     memcpy(handle->ip, &((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr, 4);
     ioctl(handle->fd, SIOCGIFINDEX, &ifr);
     handle->index = ifr.ifr_ifindex;
-    strncpy(handle->name, HAL_IFACE_NAME, HAL_IFACE_NAMELEN-1);
+    strncpy(handle->name, interface_name, HAL_IFACE_NAMELEN-1);
     ioctl(handle->fd, SIOCGIFMTU, &ifr);
     handle->mtu = ifr.ifr_mtu;
 

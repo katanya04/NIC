@@ -42,7 +42,7 @@ make
 ## Run
 
 ```bash
-sudo bin/networking
+sudo bin/networking <interface name>
 ```
 
 You should see something like:
@@ -54,13 +54,11 @@ Note: On a busy interface, you may receive many frames.
 
 ## Configure interface name
 
-The interface is currently hard-coded in `hal.h`:
+The interface name is passed as the first parameter of the executable
 
-```c
-#define HAL_IFACE_NAME "eth0"
+```bash
+sudo bin/networking wlp3s0
 ```
-
-Change it to the interface you want (e.g. `"enp0s3"`, `"wlan0"`), rebuild, and run again.
 
 ## Notes / limitations
 

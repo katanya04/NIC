@@ -1,5 +1,5 @@
-#ifndef _INCLUDED_ARP_H
-#define _INCLUDED_ARP_H
+#ifndef INCLUDED_ARP_H
+#define INCLUDED_ARP_H
 
 #include <stdint.h>
 

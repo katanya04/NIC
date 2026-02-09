@@ -6,7 +6,9 @@
 
 #include "interface.h"
 #include "ethernet.h"
+#include "commons.h"
 
+char interface_name[MAX_INTERFACE_NAME];
 
 nic_device_t nic;
 nic_driver_t * drv;
@@ -19,6 +21,12 @@ void on_receive_packet(const void *data, unsigned int length) {
 }
 
 int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        printf("%s <interface name>", argv[0]);
+        return -1;
+    }
+    strncpy(interface_name, argv[1], MAX_INTERFACE_NAME - 1);
+
     drv = nic_get_driver();
 
     if (drv->init(&nic) != STATUS_OK) {

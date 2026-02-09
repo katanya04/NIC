@@ -1,5 +1,5 @@
-#ifndef _INCLUDED_ETHERNET_H
-#define _INCLUDED_ETHERNET_H
+#ifndef INCLUDED_ETHERNET_H
+#define INCLUDED_ETHERNET_H
 
 #include <stdint.h>
 
