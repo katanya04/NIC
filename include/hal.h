@@ -1,7 +1,7 @@
 #ifndef _HAL_H
 #define _HAL_H 
 
-#define HAL_IFACE_NAME "eth0"
+#define HAL_IFACE_NAME "wlp3s0"
 #define HAL_IFACE_NAMELEN 32
 
 void * hal_create_device();
