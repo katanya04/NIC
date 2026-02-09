@@ -10,15 +10,6 @@
 
 #include "hal.h"
 
-struct device_handle {
-    char name[HAL_IFACE_NAMELEN];
-    int fd;
-    int index;
-    unsigned char mac[6];
-    unsigned char ip[4];
-    unsigned int mtu;
-};
-
 void * hal_create_device() {
     struct device_handle *handle = malloc(sizeof(struct device_handle));
     if (!handle) {

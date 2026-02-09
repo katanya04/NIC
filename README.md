@@ -29,20 +29,20 @@ A small C project that implements a simple NIC abstraction (`interface.c`) on to
 - A network interface you can bind to (default: `eth0`)
 - Raw sockets require elevated privileges:
   - run as root (`sudo`), or
-  - grant capability: `sudo setcap cap_net_raw+ep ./networking`
+  - grant capability: `sudo setcap cap_net_raw+ep bin/networking`
 
 ## Build
 
 From the project directory:
 
 ```bash
-gcc -Wall -Wextra -O2 -pthread -o networking main.c interface.c hal.c
+make
 ```
 
 ## Run
 
 ```bash
-sudo ./networking
+sudo bin/networking
 ```
 
 You should see something like:
@@ -70,6 +70,5 @@ Change it to the interface you want (e.g. `"enp0s3"`, `"wlan0"`), rebuild, and r
 
 ## Useful next steps
 
-- Add a small `Makefile`.
 - Add filtering (e.g., only print frames matching a specific EtherType).
 - Improve TX/RX buffer management (locking, backpressure, and cleanup on errors).
