@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "hal.h"
+#include "interface.h"
 
 #define NIC_DEFAULT_MTU  1500
 #define ETH_MAC_LEN      6
@@ -20,14 +21,17 @@ typedef struct ethernet_frame {
     uint8_t dest_mac[ETH_MAC_LEN];
     uint8_t src_mac[ETH_MAC_LEN];
     uint16_t ethertype;
-    uint8_t payload[NIC_DEFAULT_MTU]; //Hardcoded mtu for testing!!!
+    uint8_t payload[NIC_DEFAULT_MTU];
 } __attribute__((packed)) ethernet_frame;
 
 unsigned int eth_build_frame(ethernet_frame *frame, const uint8_t *src_mac,
                              const uint8_t *dst_mac, const uint16_t type,
                              const void *data, const uint16_t payload_len);
 
-void ethernet_receive(const void *data, unsigned int length, 
-                      device_handle *dev, void *driver);
+int ethernet_send(nic_driver_t *drv, nic_device_t *nic, 
+                  ethernet_frame *frame, unsigned int length);
+
+void ethernet_handle(const void *data, unsigned int length,
+                     device_handle *dev, nic_driver_t *drv);
 
 #endif

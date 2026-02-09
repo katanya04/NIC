@@ -7,6 +7,7 @@
 #include "interface.h"
 #include "ethernet.h"
 #include "commons.h"
+#include "dhcp.h"
 
 char interface_name[MAX_INTERFACE_NAME];
 
@@ -17,7 +18,7 @@ void on_receive_packet(const void *data, unsigned int length) {
     struct device_handle *dev = (struct device_handle *)nic.hw_handle;
     
     printf("\nRX: %u bytes on %s\n", length, dev->name);
-    ethernet_receive(data, length, dev, drv);
+    ethernet_handle(data, length, dev, drv);
 }
 
 int main(int argc, char* argv[]) {
@@ -34,7 +35,8 @@ int main(int argc, char* argv[]) {
         return -1;
     }
     if (drv->ioctl(&nic, NIC_IOCTL_ADD_RX_CALLBACK, (void *)&on_receive_packet) != STATUS_OK) {
-        printf("Failed to add RX callback\n");
+        printf("[MAIN] Starting DHCP client...\n");//Ivan
+        dhcp_start((struct device_handle *)nic.hw_handle);//Ivan
         drv->shutdown(&nic);
         return -1;
     }

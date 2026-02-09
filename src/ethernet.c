@@ -5,14 +5,11 @@
 
 #include "ethernet.h"
 #include "arp.h"
+#include "ipv4.h"
 
-unsigned int eth_build_frame(
-    ethernet_frame *frame,
-    const uint8_t *src_mac,
-    const uint8_t *dst_mac,
-    const uint16_t type,
-    const void *data,
-    const uint16_t payload_len) 
+unsigned int eth_build_frame(ethernet_frame *frame, const uint8_t *src_mac,
+                             const uint8_t *dst_mac, const uint16_t type,
+                             const void *data, const uint16_t payload_len) 
 {
     memcpy(frame->dest_mac, dst_mac, 6);
     memcpy(frame->src_mac, src_mac, 6);
@@ -22,14 +19,20 @@ unsigned int eth_build_frame(
     return ETH_HEADER_LEN + payload_len;
 }
 
+int ethernet_send(nic_driver_t *drv, nic_device_t *nic,
+                  ethernet_frame *frame, unsigned int length)
+{
+    return drv->send_packet(nic, frame, length);
+}
+
 static inline int eth_is_for_me(const ethernet_frame *frame, const uint8_t *my_mac) {
     const uint8_t broadcast[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
     return (memcmp(frame->dest_mac, my_mac, 6) == 0) ||
            (memcmp(frame->dest_mac, broadcast, 6) == 0);
 }
 
-void ethernet_receive(const void *data, unsigned int length,
-                      device_handle *dev, void *driver)
+void ethernet_handle(const void *data, unsigned int length,
+                     device_handle *dev, nic_driver_t *drv)
 {
     if (length < ETH_HEADER_LEN) {
         printf("Ethernet: frame too short (%u bytes)\n", length);
@@ -41,8 +44,7 @@ void ethernet_receive(const void *data, unsigned int length,
     unsigned int payload_len = length - ETH_HEADER_LEN;
     
     if (!eth_is_for_me(frame, dev->mac)) {
-        printf("Ethernet: not for me (dst=%02x:%02x...)\n",
-               frame->dest_mac[0], frame->dest_mac[1]);
+        printf("Ethernet: not for me\n");
         return;
     }
     
@@ -53,11 +55,14 @@ void ethernet_receive(const void *data, unsigned int length,
     
     switch (ethertype) {
         case ethtype_ARP:
-            arp_receive(frame->payload, payload_len, 
-                       (uint8_t *)frame->src_mac, dev, driver);
+            arp_handle(frame->payload, payload_len, 
+                      (uint8_t *)frame->src_mac, dev, drv);
             break;
         case ethtype_IPv4:
-            printf("Ethernet: IPv4 not implemented yet\n");
+            /* Actualizar caché ARP con IP/MAC origen */
+            /* Necesitamos parsear el header IP para obtener la IP */
+            /* Por simplicidad, lo hacemos en ipv4_handler */
+            ipv4_handler((uint8_t *)frame->payload, payload_len, dev, drv);
             break;
         default:
             printf("Ethernet: unknown ethertype 0x%04x\n", ethertype);
